@@ -79,7 +79,7 @@ class _SongListScreenState extends State<SongListScreen> {
                 height: 15,
                 decoration: BoxDecoration(
                   border: Border.all(color: Colors.white),
-                  color: Colors.blue,
+                  color: Colors.blueAccent,
                   shape: BoxShape.circle,
                 ),
               ),
