@@ -9,8 +9,8 @@ void main() {
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Flutter Demo',
+    return GetMaterialApp(
+      title: 'PIU Achievement Manager',
       theme: ThemeData(
         brightness: Brightness.light,
         appBarTheme: AppBarTheme(
@@ -34,7 +34,9 @@ class MyApp extends StatelessWidget {
       themeMode: ThemeMode.light,
       debugShowCheckedModeBanner: false,
       initialRoute: '/songlist',
-      getPages: [GetPage(name: '/songlist', page: () => SongListScreen())],
+      getPages: [
+        GetPage(name: '/songlist', page: () => SongListScreen())
+      ],
     );
   }
 }
