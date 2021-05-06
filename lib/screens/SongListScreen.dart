@@ -14,7 +14,7 @@ class SongListScreen extends StatefulWidget {
 class _SongListScreenState extends State<SongListScreen> {
   late var jsonData;
 
-  final List difficultyColor = [
+  final List diffColor = [
     Colors.red,
     Colors.amber,
     Colors.yellow,
@@ -24,17 +24,8 @@ class _SongListScreenState extends State<SongListScreen> {
     Colors.purple,
     Colors.grey
   ];
-  final List difficultyNameEn = [
-    "SHD",
-    "HD",
-    "HN",
-    "NM",
-    "EN",
-    "EZ",
-    "SE",
-    "SP"
-  ];
-  final List difficultyNameKo = ["최상", "상", "중상", "중", "중하", "하", "최하", "종특"];
+  final List diffNameEn = ["SHD", "HD", "HN", "NM", "EN", "EZ", "SE", "SP"];
+  final List diffNameKo = ["최상", "상", "중상", "중", "중하", "하", "최하", "종특"];
 
   Future loadDifficultyData() async {
     var jsonText = await rootBundle.loadString('assets/json/S21.json');
@@ -48,12 +39,11 @@ class _SongListScreenState extends State<SongListScreen> {
         ClipRRect(
           borderRadius: BorderRadius.circular(4.0),
           child: Image.asset(
-              'assets/songJacket/${jsonData[difficultyNameEn[difficulty]][idx]['songNum']}.png'),
+              'assets/songJacket/${jsonData[diffNameEn[difficulty]][idx]['songNum']}.png'),
         ),
         Row(
           children: [
-            if (jsonData[difficultyNameEn[difficulty]][idx]['skill']
-                .contains('D'))
+            if (jsonData[diffNameEn[difficulty]][idx]['skill'].contains('D'))
               Container(
                 width: 15,
                 height: 15,
@@ -63,8 +53,7 @@ class _SongListScreenState extends State<SongListScreen> {
                   shape: BoxShape.circle,
                 ),
               ),
-            if (jsonData[difficultyNameEn[difficulty]][idx]['skill']
-                .contains('G'))
+            if (jsonData[diffNameEn[difficulty]][idx]['skill'].contains('G'))
               Container(
                 width: 15,
                 height: 15,
@@ -74,8 +63,7 @@ class _SongListScreenState extends State<SongListScreen> {
                   shape: BoxShape.circle,
                 ),
               ),
-            if (jsonData[difficultyNameEn[difficulty]][idx]['skill']
-                .contains('T'))
+            if (jsonData[diffNameEn[difficulty]][idx]['skill'].contains('T'))
               Container(
                 width: 15,
                 height: 15,
@@ -85,8 +73,7 @@ class _SongListScreenState extends State<SongListScreen> {
                   shape: BoxShape.circle,
                 ),
               ),
-            if (jsonData[difficultyNameEn[difficulty]][idx]['skill']
-                .contains('B'))
+            if (jsonData[diffNameEn[difficulty]][idx]['skill'].contains('B'))
               Container(
                 width: 15,
                 height: 15,
@@ -96,8 +83,7 @@ class _SongListScreenState extends State<SongListScreen> {
                   shape: BoxShape.circle,
                 ),
               ),
-            if (jsonData[difficultyNameEn[difficulty]][idx]['skill']
-                .contains('S'))
+            if (jsonData[diffNameEn[difficulty]][idx]['skill'].contains('S'))
               Container(
                 width: 15,
                 height: 15,
@@ -121,7 +107,7 @@ class _SongListScreenState extends State<SongListScreen> {
         child: ExpansionTile(
           initiallyExpanded: true,
           title: Text(
-            difficultyNameKo[difficulty],
+            diffNameKo[difficulty],
             style: TextStyle(
                 fontSize: 18, fontWeight: FontWeight.bold, color: Colors.black),
           ),
@@ -132,7 +118,7 @@ class _SongListScreenState extends State<SongListScreen> {
                 padding: EdgeInsets.fromLTRB(8, 8, 8, 8),
                 primary: false,
                 shrinkWrap: true,
-                itemCount: jsonData[difficultyNameEn[difficulty]].length,
+                itemCount: jsonData[diffNameEn[difficulty]].length,
                 itemBuilder: (BuildContext context, int idx) {
                   return InkWell(
                     onTap: () {
@@ -170,8 +156,8 @@ class _SongListScreenState extends State<SongListScreen> {
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   for (var i = 0; i < 8; i++)
-                    if (jsonData[difficultyNameEn[i]].length != 0)
-                      songListView(i, difficultyColor[i])
+                    if (jsonData[diffNameEn[i]].length != 0)
+                      songListView(i, diffColor[i])
                 ],
               );
             }
