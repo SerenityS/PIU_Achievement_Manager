@@ -24,13 +24,93 @@ class _SongListScreenState extends State<SongListScreen> {
     Colors.purple,
     Colors.grey
   ];
-  final List difficultyNameEn = ["SHD", "HD", "HN", "NM", "EN", "EZ", "SE", "SP"];
+  final List difficultyNameEn = [
+    "SHD",
+    "HD",
+    "HN",
+    "NM",
+    "EN",
+    "EZ",
+    "SE",
+    "SP"
+  ];
   final List difficultyNameKo = ["최상", "상", "중상", "중", "중하", "하", "최하", "종특"];
 
   Future loadDifficultyData() async {
     var jsonText = await rootBundle.loadString('assets/json/S21.json');
     jsonData = json.decode(jsonText);
     return true;
+  }
+
+  Widget songJacketImage(difficulty, idx) {
+    return Stack(
+      children: [
+        ClipRRect(
+          borderRadius: BorderRadius.circular(4.0),
+          child: Image.asset(
+              'assets/songJacket/${jsonData[difficultyNameEn[difficulty]][idx]['songNum']}.png'),
+        ),
+        Row(
+          children: [
+            if (jsonData[difficultyNameEn[difficulty]][idx]['skill']
+                .contains('D'))
+              Container(
+                width: 15,
+                height: 15,
+                decoration: BoxDecoration(
+                  border: Border.all(color: Colors.white),
+                  color: Colors.red,
+                  shape: BoxShape.circle,
+                ),
+              ),
+            if (jsonData[difficultyNameEn[difficulty]][idx]['skill']
+                .contains('G'))
+              Container(
+                width: 15,
+                height: 15,
+                decoration: BoxDecoration(
+                  border: Border.all(color: Colors.white),
+                  color: Colors.yellow,
+                  shape: BoxShape.circle,
+                ),
+              ),
+            if (jsonData[difficultyNameEn[difficulty]][idx]['skill']
+                .contains('T'))
+              Container(
+                width: 15,
+                height: 15,
+                decoration: BoxDecoration(
+                  border: Border.all(color: Colors.white),
+                  color: Colors.green,
+                  shape: BoxShape.circle,
+                ),
+              ),
+            if (jsonData[difficultyNameEn[difficulty]][idx]['skill']
+                .contains('B'))
+              Container(
+                width: 15,
+                height: 15,
+                decoration: BoxDecoration(
+                  border: Border.all(color: Colors.white),
+                  color: Colors.blue,
+                  shape: BoxShape.circle,
+                ),
+              ),
+            if (jsonData[difficultyNameEn[difficulty]][idx]['skill']
+                .contains('S'))
+              Container(
+                width: 15,
+                height: 15,
+                decoration: BoxDecoration(
+                  border: Border.all(color: Colors.white),
+                  color: Colors.grey,
+                  shape: BoxShape.circle,
+                ),
+              ),
+          ],
+        ),
+      ],
+    );
   }
 
   Widget songListView(difficulty, color) {
@@ -58,11 +138,7 @@ class _SongListScreenState extends State<SongListScreen> {
                     onTap: () {
                       // TODO: Implement onTap Activity
                     },
-                    child: ClipRRect(
-                      borderRadius: BorderRadius.circular(4.0),
-                      child: Image.asset(
-                          'assets/songJacket/${jsonData[difficultyNameEn[difficulty]][idx]['songNum']}.png'),
-                    ),
+                    child: songJacketImage(difficulty, idx),
                   );
                 },
                 gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
