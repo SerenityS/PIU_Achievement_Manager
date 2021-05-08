@@ -12,9 +12,9 @@ class SongListScreen extends StatefulWidget {
 }
 
 class _SongListScreenState extends State<SongListScreen> {
-  late var jsonData;
+  late var difData;
 
-  final List diffColor = [
+  final List difColor = [
     Colors.red,
     Colors.amber,
     Colors.yellow,
@@ -24,26 +24,26 @@ class _SongListScreenState extends State<SongListScreen> {
     Colors.purple,
     Colors.grey
   ];
-  final List diffNameEn = ["SHD", "HD", "HN", "NM", "EN", "EZ", "SE", "SP"];
-  final List diffNameKo = ["최상", "상", "중상", "중", "중하", "하", "최하", "종특"];
+  final List difNameEn = ["SHD", "HD", "HN", "NM", "EN", "EZ", "SE", "SP"];
+  final List difNameKo = ["최상", "상", "중상", "중", "중하", "하", "최하", "종특"];
 
   Future loadDifficultyData() async {
     var jsonText = await rootBundle.loadString('assets/json/S21.json');
-    jsonData = json.decode(jsonText);
+    difData = json.decode(jsonText);
     return true;
   }
 
-  Widget songJacketImage(difficulty, idx) {
+  Widget songJacketImage(dif, idx) {
     return Stack(
       children: [
         ClipRRect(
           borderRadius: BorderRadius.circular(4.0),
           child: Image.asset(
-              'assets/songJacket/${jsonData[diffNameEn[difficulty]][idx]['songNum']}.png'),
+              'assets/songJacket/${difData[difNameEn[dif]][idx]['songNum']}.png'),
         ),
         Row(
           children: [
-            if (jsonData[diffNameEn[difficulty]][idx]['skill'].contains('D'))
+            if (difData[difNameEn[dif]][idx]['skill'].contains('D'))
               Container(
                 width: 15,
                 height: 15,
@@ -53,7 +53,7 @@ class _SongListScreenState extends State<SongListScreen> {
                   shape: BoxShape.circle,
                 ),
               ),
-            if (jsonData[diffNameEn[difficulty]][idx]['skill'].contains('G'))
+            if (difData[difNameEn[dif]][idx]['skill'].contains('G'))
               Container(
                 width: 15,
                 height: 15,
@@ -63,7 +63,7 @@ class _SongListScreenState extends State<SongListScreen> {
                   shape: BoxShape.circle,
                 ),
               ),
-            if (jsonData[diffNameEn[difficulty]][idx]['skill'].contains('T'))
+            if (difData[difNameEn[dif]][idx]['skill'].contains('T'))
               Container(
                 width: 15,
                 height: 15,
@@ -73,7 +73,7 @@ class _SongListScreenState extends State<SongListScreen> {
                   shape: BoxShape.circle,
                 ),
               ),
-            if (jsonData[diffNameEn[difficulty]][idx]['skill'].contains('B'))
+            if (difData[difNameEn[dif]][idx]['skill'].contains('B'))
               Container(
                 width: 15,
                 height: 15,
@@ -83,7 +83,7 @@ class _SongListScreenState extends State<SongListScreen> {
                   shape: BoxShape.circle,
                 ),
               ),
-            if (jsonData[diffNameEn[difficulty]][idx]['skill'].contains('S'))
+            if (difData[difNameEn[dif]][idx]['skill'].contains('S'))
               Container(
                 width: 15,
                 height: 15,
@@ -99,7 +99,7 @@ class _SongListScreenState extends State<SongListScreen> {
     );
   }
 
-  Widget songListView(difficulty, color) {
+  Widget songListView(dif, color) {
     return Flexible(
       child: Card(
         color: color,
@@ -107,7 +107,7 @@ class _SongListScreenState extends State<SongListScreen> {
         child: ExpansionTile(
           initiallyExpanded: true,
           title: Text(
-            diffNameKo[difficulty],
+            difNameKo[dif],
             style: TextStyle(
                 fontSize: 18, fontWeight: FontWeight.bold, color: Colors.black),
           ),
@@ -118,13 +118,13 @@ class _SongListScreenState extends State<SongListScreen> {
                 padding: EdgeInsets.fromLTRB(8, 8, 8, 8),
                 primary: false,
                 shrinkWrap: true,
-                itemCount: jsonData[diffNameEn[difficulty]].length,
+                itemCount: difData[difNameEn[dif]].length,
                 itemBuilder: (BuildContext context, int idx) {
                   return InkWell(
                     onTap: () {
                       // TODO: Implement onTap Activity
                     },
-                    child: songJacketImage(difficulty, idx),
+                    child: songJacketImage(dif, idx),
                   );
                 },
                 gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
@@ -156,8 +156,8 @@ class _SongListScreenState extends State<SongListScreen> {
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   for (var i = 0; i < 8; i++)
-                    if (jsonData[diffNameEn[i]].length != 0)
-                      songListView(i, diffColor[i])
+                    if (difData[difNameEn[i]].length != 0)
+                      songListView(i, difColor[i])
                 ],
               );
             }
