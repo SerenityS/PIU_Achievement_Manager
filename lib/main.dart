@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:get_storage/get_storage.dart';
 import 'package:piu_achievement_manager/screens/SongListScreen.dart';
 
-void main() {
+void main() async {
+  await GetStorage.init();
   runApp(MyApp());
 }
 
@@ -34,9 +36,7 @@ class MyApp extends StatelessWidget {
       themeMode: ThemeMode.light,
       debugShowCheckedModeBanner: false,
       initialRoute: '/songlist',
-      getPages: [
-        GetPage(name: '/songlist', page: () => SongListScreen())
-      ],
+      getPages: [GetPage(name: '/songlist', page: () => SongListScreen())],
     );
   }
 }

@@ -3,6 +3,8 @@ import 'dart:convert';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:get/get.dart';
+import 'package:get_storage/get_storage.dart';
 
 class SongListScreen extends StatefulWidget {
   const SongListScreen({Key? key}) : super(key: key);
@@ -12,6 +14,9 @@ class SongListScreen extends StatefulWidget {
 }
 
 class _SongListScreenState extends State<SongListScreen> {
+  final _pref = GetStorage();
+  var gradeData = {};
+
   late var difData;
 
   final List difColor = [
@@ -27,6 +32,94 @@ class _SongListScreenState extends State<SongListScreen> {
   final List difNameEn = ['SHD', 'HD', 'HN', 'NM', 'EN', 'EZ', 'SE', 'SP'];
   final List difNameKo = ['최상', '상', '중상', '중', '중하', '하', '최하', '종특'];
 
+  @override
+  void initState() {
+    loadGradeData();
+    super.initState();
+  }
+
+  void selectGradeDialog(context, songNum) {
+    var grade1 = ['SSS', 'S', 'B', 'D'];
+    var grade2 = ['SS', 'A', 'C', 'F'];
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('랭크를 선택해주세요'),
+          content: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Column(
+                mainAxisSize: MainAxisSize.min,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  for (var grade in grade1)
+                    InkWell(
+                      onTap: () {
+                        gradeData['$songNum'] = grade;
+                        setState(() {});
+                        Get.back();
+                      },
+                      child: Container(
+                        width: 100,
+                        height: 50,
+                        margin: const EdgeInsets.all(8.0),
+                        child: Image.asset('assets/grade/grade$grade.png'),
+                      ),
+                    ),
+                ],
+              ),
+              Column(
+                mainAxisSize: MainAxisSize.min,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  for (var grade in grade2)
+                    InkWell(
+                      onTap: () {
+                        gradeData['$songNum'] = grade;
+                        setState(() {});
+                        Get.back();
+                      },
+                      child: Container(
+                        width: 100,
+                        height: 50,
+                        margin: const EdgeInsets.all(8.0),
+                        child: Image.asset('assets/grade/grade$grade.png'),
+                      ),
+                    ),
+                ],
+              ),
+            ],
+          ),
+          actions: [
+            TextButton(
+              onPressed: () {
+                gradeData.remove('$songNum');
+                setState(() {});
+                Get.back();
+              },
+              child: Text('삭제'),
+            ),
+            TextButton(
+              onPressed: () {
+                Get.back();
+              },
+              child: Text('취소'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  Future loadGradeData() async {
+    try {
+      gradeData = await _pref.read('S21');
+    } catch (e) {
+      gradeData = {};
+    }
+  }
+
   Future loadDifficultyData() async {
     var jsonText = await rootBundle.loadString('assets/json/S21.json');
     difData = json.decode(jsonText);
@@ -34,16 +127,16 @@ class _SongListScreenState extends State<SongListScreen> {
   }
 
   Widget songJacketImage(dif, idx) {
+    var songData = difData[difNameEn[dif]][idx];
     return Stack(
       children: [
         ClipRRect(
           borderRadius: BorderRadius.circular(4.0),
-          child: Image.asset(
-              'assets/songJacket/${difData[difNameEn[dif]][idx]['songNum']}.png'),
+          child: Image.asset('assets/songJacket/${songData['songNum']}.png'),
         ),
         Row(
           children: [
-            if (difData[difNameEn[dif]][idx]['skill'].contains('D'))
+            if (songData['skill'].contains('D'))
               Container(
                 width: 15,
                 height: 15,
@@ -53,7 +146,7 @@ class _SongListScreenState extends State<SongListScreen> {
                   shape: BoxShape.circle,
                 ),
               ),
-            if (difData[difNameEn[dif]][idx]['skill'].contains('G'))
+            if (songData['skill'].contains('G'))
               Container(
                 width: 15,
                 height: 15,
@@ -63,7 +156,7 @@ class _SongListScreenState extends State<SongListScreen> {
                   shape: BoxShape.circle,
                 ),
               ),
-            if (difData[difNameEn[dif]][idx]['skill'].contains('T'))
+            if (songData['skill'].contains('T'))
               Container(
                 width: 15,
                 height: 15,
@@ -73,7 +166,7 @@ class _SongListScreenState extends State<SongListScreen> {
                   shape: BoxShape.circle,
                 ),
               ),
-            if (difData[difNameEn[dif]][idx]['skill'].contains('B'))
+            if (songData['skill'].contains('B'))
               Container(
                 width: 15,
                 height: 15,
@@ -83,7 +176,7 @@ class _SongListScreenState extends State<SongListScreen> {
                   shape: BoxShape.circle,
                 ),
               ),
-            if (difData[difNameEn[dif]][idx]['skill'].contains('S'))
+            if (songData['skill'].contains('S'))
               Container(
                 width: 15,
                 height: 15,
@@ -95,6 +188,15 @@ class _SongListScreenState extends State<SongListScreen> {
               ),
           ],
         ),
+        if (gradeData['${songData['songNum']}'] != null)
+          Align(
+            alignment: Alignment.bottomRight,
+            child: Container(
+              height: 27.5,
+              child: Image.asset(
+                  'assets/grade/grade${gradeData['${songData['songNum']}']}.png'),
+            ),
+          ),
       ],
     );
   }
@@ -121,8 +223,10 @@ class _SongListScreenState extends State<SongListScreen> {
                 itemCount: difData[difNameEn[dif]].length,
                 itemBuilder: (BuildContext context, int idx) {
                   return InkWell(
-                    onTap: () {
-                      // TODO: Implement onTap Activity
+                    onTap: () async {
+                      selectGradeDialog(context,
+                          '${difData[difNameEn[dif]][idx]['songNum']}');
+                      await _pref.write('S21', gradeData);
                     },
                     child: songJacketImage(dif, idx),
                   );
