@@ -12,7 +12,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GetMaterialApp(
-      title: 'PIU Achievement Manager',
+      title: 'Pump It Up 서열표',
       theme: ThemeData(
         brightness: Brightness.light,
         appBarTheme: AppBarTheme(

@@ -247,7 +247,7 @@ class _SongListScreenState extends State<SongListScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('PIU Achievement Manager'),
+        title: Text('Pump It Up 서열표'),
       ),
       body: SingleChildScrollView(
         child: FutureBuilder(
