@@ -25,6 +25,7 @@ dependencies:
     sdk: flutter
 
   get: ^4.1.4
+  get_storage:
   pedantic: ^1.11.0
 
 dev_dependencies:
