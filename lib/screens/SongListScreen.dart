@@ -24,8 +24,8 @@ class _SongListScreenState extends State<SongListScreen> {
     Colors.purple,
     Colors.grey
   ];
-  final List difNameEn = ["SHD", "HD", "HN", "NM", "EN", "EZ", "SE", "SP"];
-  final List difNameKo = ["최상", "상", "중상", "중", "중하", "하", "최하", "종특"];
+  final List difNameEn = ['SHD', 'HD', 'HN', 'NM', 'EN', 'EZ', 'SE', 'SP'];
+  final List difNameKo = ['최상', '상', '중상', '중', '중하', '하', '최하', '종특'];
 
   Future loadDifficultyData() async {
     var jsonText = await rootBundle.loadString('assets/json/S21.json');
@@ -143,7 +143,7 @@ class _SongListScreenState extends State<SongListScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("PIU Achievement Manager"),
+        title: Text('PIU Achievement Manager'),
       ),
       body: SingleChildScrollView(
         child: FutureBuilder(
