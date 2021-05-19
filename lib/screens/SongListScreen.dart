@@ -55,11 +55,12 @@ class _SongListScreenState extends State<SongListScreen> {
                 children: [
                   for (var grade in grade1)
                     InkWell(
-                      onTap: () {
+                      onTap: () async {
                         gradeData['$songNum'] = grade;
                         setState(() {});
                         Get.back();
-                      },
+                        await _pref.write('S21', gradeData);
+                        },
                       child: Container(
                         width: 100,
                         height: 50,
@@ -75,10 +76,11 @@ class _SongListScreenState extends State<SongListScreen> {
                 children: [
                   for (var grade in grade2)
                     InkWell(
-                      onTap: () {
+                      onTap: () async {
                         gradeData['$songNum'] = grade;
                         setState(() {});
                         Get.back();
+                        await _pref.write('S21', gradeData);
                       },
                       child: Container(
                         width: 100,
@@ -226,7 +228,6 @@ class _SongListScreenState extends State<SongListScreen> {
                     onTap: () async {
                       selectGradeDialog(context,
                           '${difData[difNameEn[dif]][idx]['songNum']}');
-                      await _pref.write('S21', gradeData);
                     },
                     child: songJacketImage(dif, idx),
                   );
