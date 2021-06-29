@@ -92,6 +92,12 @@ class _SongListScreenState extends State<SongListScreen> {
                         Get.back();
                         await _pref.write('S21', gradeData);
                       },
+                      onLongPress: () async {
+                        gradeData['$songNum'] = '${gradeList[idx]}_O';
+                        setState(() {});
+                        Get.back();
+                        await _pref.write('S21', gradeData);
+                      },
                       child: Container(
                         margin: const EdgeInsets.all(8.0),
                         child: Image.asset(
@@ -298,8 +304,7 @@ class _SongListScreenState extends State<SongListScreen> {
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       for (var i = 0; i < 8; i++)
-                        if (difData[difName[i]].length != 0)
-                          songListView(i)
+                        if (difData[difName[i]].length != 0) songListView(i)
                     ],
                   );
                 }
