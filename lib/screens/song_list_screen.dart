@@ -1,9 +1,13 @@
 import 'dart:convert';
+import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
+import 'package:image_gallery_saver/image_gallery_saver.dart';
+import 'package:screenshot/screenshot.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 class SongListScreen extends StatefulWidget {
   const SongListScreen({Key? key}) : super(key: key);
@@ -14,6 +18,9 @@ class SongListScreen extends StatefulWidget {
 
 class _SongListScreenState extends State<SongListScreen> {
   final _pref = GetStorage();
+
+  ScreenshotController screenshotController = ScreenshotController();
+
   var gradeData = {};
 
   late var difData;
@@ -121,6 +128,19 @@ class _SongListScreenState extends State<SongListScreen> {
     return true;
   }
 
+  Future<String> saveImage(Uint8List bytes) async {
+    await [Permission.storage].request();
+
+    final time = DateTime.now()
+        .toIso8601String()
+        .replaceAll('.', '-')
+        .replaceAll(':', '-');
+    final name = 'PIU_$time';
+    final result = await ImageGallerySaver.saveImage(bytes, name:name);
+
+    return result['filePath'];
+  }
+
   Widget songJacketImage(dif, idx) {
     var songData = difData[difName[dif]][idx];
     return Stack(
@@ -196,10 +216,10 @@ class _SongListScreenState extends State<SongListScreen> {
     );
   }
 
-  Widget songListView(dif, color) {
+  Widget songListView(dif) {
     return Flexible(
       child: Card(
-        color: color,
+        color: difColor[dif],
         margin: EdgeInsets.symmetric(vertical: 5, horizontal: 5),
         child: ExpansionTile(
           initiallyExpanded: true,
@@ -242,24 +262,45 @@ class _SongListScreenState extends State<SongListScreen> {
     return Scaffold(
       appBar: AppBar(
         title: Text('Pump It Up 서열표'),
+        actions: [
+          IconButton(
+            onPressed: () async {
+              final image = await screenshotController.capture();
+
+              if (image != null) {
+                await saveImage(image);
+              } else {
+                return;
+              }
+              Get.snackbar('Pump It Up', '캡쳐가 완료되었습니다.');
+            },
+            icon: Icon(Icons.photo_camera_outlined),
+          ),
+        ],
       ),
       body: SingleChildScrollView(
-        child: FutureBuilder(
-          future: loadDifficultyData(),
-          builder: (BuildContext context, AsyncSnapshot snapshot) {
-            if (snapshot.hasData == false) {
-              return Center(child: CircularProgressIndicator());
-            } else {
-              return Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  for (var i = 0; i < 8; i++)
-                    if (difData[difName[i]].length != 0)
-                      songListView(i, difColor[i])
-                ],
-              );
-            }
-          },
+        child: Screenshot(
+          controller: screenshotController,
+          child: Container(
+            color: Colors.white,
+            child: FutureBuilder(
+              future: loadDifficultyData(),
+              builder: (BuildContext context, AsyncSnapshot snapshot) {
+                if (snapshot.hasData == false) {
+                  return Center(child: CircularProgressIndicator());
+                } else {
+                  return Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      for (var i = 0; i < 8; i++)
+                        if (difData[difName[i]].length != 0)
+                          songListView(i)
+                    ],
+                  );
+                }
+              },
+            ),
+          ),
         ),
       ),
     );

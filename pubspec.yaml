@@ -26,6 +26,9 @@ dependencies:
 
   get: ^4.1.4
   get_storage:
+  image_gallery_saver: ^1.6.9
+  permission_handler: ^8.1.2
+  screenshot: ^1.2.1
 
 dev_dependencies:
   flutter_test:
