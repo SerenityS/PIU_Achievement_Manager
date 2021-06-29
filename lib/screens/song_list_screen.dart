@@ -242,6 +242,11 @@ class _SongListScreenState extends State<SongListScreen> {
                       showGradeModal(
                           context, '${difData[difName[dif]][idx]['songNum']}');
                     },
+                    onLongPress: () async {
+                      gradeData.remove('${difData[difName[dif]][idx]['songNum']}');
+                      setState(() {});
+                      await _pref.write('S21', gradeData);
+                    },
                     child: songJacketImage(dif, idx),
                   );
                 },
