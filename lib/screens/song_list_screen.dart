@@ -1,6 +1,5 @@
 import 'dart:convert';
 
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
@@ -18,6 +17,7 @@ class _SongListScreenState extends State<SongListScreen> {
   var gradeData = {};
 
   late var difData;
+  late var fullSongData;
 
   final List difColor = [
     Colors.red,
@@ -35,80 +35,67 @@ class _SongListScreenState extends State<SongListScreen> {
   @override
   void initState() {
     loadGradeData();
+    loadFullSongData();
     super.initState();
   }
 
-  void selectGradeDialog(context, songNum) {
-    var grade1 = ['SSS', 'S', 'B', 'D'];
-    var grade2 = ['SS', 'A', 'C', 'F'];
-    showDialog(
+  void showGradeModal(context, songNum) {
+    var gradeList = ['SSS', 'SS', 'S', 'A', 'B', 'C', 'D', 'F'];
+
+    String songName = '';
+    for (var song in fullSongData['songs']) {
+      if (song['songNo'].toString() == songNum) {
+        songName = song['songTitle_ko'];
+        break;
+      }
+    }
+
+    showModalBottomSheet(
       context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: Text('랭크를 선택해주세요'),
-          content: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(
+          top: Radius.circular(20.0),
+        ),
+      ),
+      builder: (ctx) {
+        return Container(
+          padding: const EdgeInsets.fromLTRB(8.0, 8.0, 8.0, 16.0),
+          child: Wrap(
             children: [
-              Column(
-                mainAxisSize: MainAxisSize.min,
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  for (var grade in grade1)
-                    InkWell(
-                      onTap: () async {
-                        gradeData['$songNum'] = grade;
-                        setState(() {});
-                        Get.back();
-                        await _pref.write('S21', gradeData);
-                        },
-                      child: Container(
-                        width: 100,
-                        height: 50,
-                        margin: const EdgeInsets.all(8.0),
-                        child: Image.asset('assets/grade/grade$grade.png'),
-                      ),
-                    ),
-                ],
+              ListTile(
+                title: Text(
+                  songName,
+                  style: TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.black),
+                ),
               ),
-              Column(
-                mainAxisSize: MainAxisSize.min,
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  for (var grade in grade2)
-                    InkWell(
+              GridView.builder(
+                shrinkWrap: true,
+                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 4),
+                itemCount: gradeList.length,
+                itemBuilder: (BuildContext ctx, idx) {
+                  return GridTile(
+                    child: InkWell(
                       onTap: () async {
-                        gradeData['$songNum'] = grade;
+                        gradeData['$songNum'] = gradeList[idx];
                         setState(() {});
                         Get.back();
                         await _pref.write('S21', gradeData);
                       },
                       child: Container(
-                        width: 100,
-                        height: 50,
                         margin: const EdgeInsets.all(8.0),
-                        child: Image.asset('assets/grade/grade$grade.png'),
+                        child: Image.asset(
+                            'assets/grade/grade${gradeList[idx]}.png'),
                       ),
                     ),
-                ],
+                  );
+                },
               ),
             ],
           ),
-          actions: [
-            TextButton(
-              onPressed: () {
-                gradeData.remove('$songNum');
-                setState(() {});
-                Get.back();
-              },
-              child: Text('삭제'),
-            ),
-            TextButton(
-              onPressed: () {
-                Get.back();
-              },
-              child: Text('취소'),
-            ),
-          ],
         );
       },
     );
@@ -125,6 +112,12 @@ class _SongListScreenState extends State<SongListScreen> {
   Future loadDifficultyData() async {
     var jsonText = await rootBundle.loadString('assets/json/S21.json');
     difData = json.decode(jsonText);
+    return true;
+  }
+
+  Future loadFullSongData() async {
+    var jsonText = await rootBundle.loadString('assets/json/songList.json');
+    fullSongData = json.decode(jsonText);
     return true;
   }
 
@@ -226,8 +219,8 @@ class _SongListScreenState extends State<SongListScreen> {
                 itemBuilder: (BuildContext context, int idx) {
                   return InkWell(
                     onTap: () async {
-                      selectGradeDialog(context,
-                          '${difData[difName[dif]][idx]['songNum']}');
+                      showGradeModal(
+                          context, '${difData[difName[dif]][idx]['songNum']}');
                     },
                     child: songJacketImage(dif, idx),
                   );
