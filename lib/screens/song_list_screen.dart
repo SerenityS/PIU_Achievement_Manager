@@ -29,8 +29,8 @@ class _SongListScreenState extends State<SongListScreen> {
     Colors.purple,
     Colors.grey
   ];
-  final List difNameEn = ['SHD', 'HD', 'HN', 'NM', 'EN', 'EZ', 'SE', 'SP'];
-  final List difNameKo = ['최상', '상', '중상', '중', '중하', '하', '최하', '종특'];
+
+  final List difName = ['최상', '상', '중상', '중', '중하', '하', '최하', '종특'];
 
   @override
   void initState() {
@@ -129,7 +129,7 @@ class _SongListScreenState extends State<SongListScreen> {
   }
 
   Widget songJacketImage(dif, idx) {
-    var songData = difData[difNameEn[dif]][idx];
+    var songData = difData[difName[dif]][idx];
     return Stack(
       children: [
         ClipRRect(
@@ -211,7 +211,7 @@ class _SongListScreenState extends State<SongListScreen> {
         child: ExpansionTile(
           initiallyExpanded: true,
           title: Text(
-            difNameKo[dif],
+            difName[dif],
             style: TextStyle(
                 fontSize: 18, fontWeight: FontWeight.bold, color: Colors.black),
           ),
@@ -222,12 +222,12 @@ class _SongListScreenState extends State<SongListScreen> {
                 padding: EdgeInsets.fromLTRB(8, 8, 8, 8),
                 primary: false,
                 shrinkWrap: true,
-                itemCount: difData[difNameEn[dif]].length,
+                itemCount: difData[difName[dif]].length,
                 itemBuilder: (BuildContext context, int idx) {
                   return InkWell(
                     onTap: () async {
                       selectGradeDialog(context,
-                          '${difData[difNameEn[dif]][idx]['songNum']}');
+                          '${difData[difName[dif]][idx]['songNum']}');
                     },
                     child: songJacketImage(dif, idx),
                   );
@@ -261,7 +261,7 @@ class _SongListScreenState extends State<SongListScreen> {
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   for (var i = 0; i < 8; i++)
-                    if (difData[difNameEn[i]].length != 0)
+                    if (difData[difName[i]].length != 0)
                       songListView(i, difColor[i])
                 ],
               );
