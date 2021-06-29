@@ -6,7 +6,6 @@ import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:image_gallery_saver/image_gallery_saver.dart';
-import 'package:screenshot/screenshot.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 class SongListScreen extends StatefulWidget {
@@ -22,6 +21,8 @@ class _SongListScreenState extends State<SongListScreen> {
   ScreenshotController screenshotController = ScreenshotController();
 
   var gradeData = {};
+
+  int clearedCount = 0;
 
   late var difData;
   late var fullSongData;
@@ -88,6 +89,7 @@ class _SongListScreenState extends State<SongListScreen> {
                     child: InkWell(
                       onTap: () async {
                         gradeData['$songNum'] = gradeList[idx];
+                        countCleared();
                         setState(() {});
                         Get.back();
                         await _pref.write('S21', gradeData);
@@ -114,12 +116,23 @@ class _SongListScreenState extends State<SongListScreen> {
     );
   }
 
+  Future countCleared() async {
+    var gradeList = ['SSS', 'SS', 'S', 'A', 'B', 'C', 'D', 'F'];
+
+    clearedCount = 0;
+
+    for (var grade in gradeData.values) {
+      if (gradeList.contains(grade)) clearedCount++;
+    }
+  }
+
   Future loadGradeData() async {
     try {
       gradeData = await _pref.read('S21');
     } catch (e) {
       gradeData = {};
     }
+    await countCleared();
   }
 
   Future loadDifficultyData() async {
@@ -222,6 +235,33 @@ class _SongListScreenState extends State<SongListScreen> {
     );
   }
 
+  Widget roadToTitle() {
+    return Card(
+      color: Colors.redAccent,
+      child: Container(
+        padding: EdgeInsets.all(8.0),
+        child: Column(
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text(
+                  'Road to ',
+                  style: TextStyle(fontSize: 25, fontWeight: FontWeight.w600, color: Colors.white),
+                ),
+                Image.asset('assets/title/33.png'),
+                Text(
+                  ' ($clearedCount/30)',
+                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.w500, color: Colors.white),
+                ),
+              ],
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
   Widget songListView(dif) {
     return Flexible(
       child: Card(
@@ -249,7 +289,9 @@ class _SongListScreenState extends State<SongListScreen> {
                           context, '${difData[difName[dif]][idx]['songNum']}');
                     },
                     onLongPress: () async {
-                      gradeData.remove('${difData[difName[dif]][idx]['songNum']}');
+                      gradeData
+                          .remove('${difData[difName[dif]][idx]['songNum']}');
+                      countCleared();
                       setState(() {});
                       await _pref.write('S21', gradeData);
                     },
@@ -303,6 +345,7 @@ class _SongListScreenState extends State<SongListScreen> {
                   return Column(
                     mainAxisSize: MainAxisSize.min,
                     children: [
+                      roadToTitle(),
                       for (var i = 0; i < 8; i++)
                         if (difData[difName[i]].length != 0) songListView(i)
                     ],
