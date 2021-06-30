@@ -7,6 +7,8 @@ import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:image_gallery_saver/image_gallery_saver.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:piu_achievement_manager/widgets/utils.dart';
+import 'package:screenshot/screenshot.dart';
 
 class SongListScreen extends StatefulWidget {
   const SongListScreen({Key? key}) : super(key: key);
@@ -15,139 +17,49 @@ class SongListScreen extends StatefulWidget {
   _SongListScreenState createState() => _SongListScreenState();
 }
 
-class _SongListScreenState extends State<SongListScreen> {
+class _SongListScreenState extends State<SongListScreen> with Utils {
   final _pref = GetStorage();
-
   ScreenshotController screenshotController = ScreenshotController();
-
-  var gradeData = {};
 
   int clearedCount = 0;
 
-  late var difData;
-  late var fullSongData;
+  late dynamic difData;
+  late dynamic fullSongData;
+  var gradeData = {};
 
-  final List difColor = [
-    Colors.red,
-    Colors.amber,
-    Colors.yellow,
-    Colors.green,
-    Colors.lightBlue,
-    Colors.indigo,
-    Colors.purple,
-    Colors.grey
-  ];
-
-  final List difName = ['최상', '상', '중상', '중', '중하', '하', '최하', '종특'];
+  String selectLevel = '21';
+  String selectType = 'S';
 
   @override
   void initState() {
     loadGradeData();
     loadFullSongData();
+    calcClearedSong();
     super.initState();
-  }
-
-  void showGradeModal(context, songNum) {
-    var gradeList = ['SSS', 'SS', 'S', 'A', 'B', 'C', 'D', 'F'];
-
-    String songName = '';
-    for (var song in fullSongData['songs']) {
-      if (song['songNo'].toString() == songNum) {
-        songName = song['songTitle_ko'];
-        break;
-      }
-    }
-
-    showModalBottomSheet(
-      context: context,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(
-          top: Radius.circular(20.0),
-        ),
-      ),
-      builder: (ctx) {
-        return Container(
-          padding: const EdgeInsets.fromLTRB(8.0, 8.0, 8.0, 16.0),
-          child: Wrap(
-            children: [
-              ListTile(
-                title: Text(
-                  songName,
-                  style: TextStyle(
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.black),
-                ),
-              ),
-              GridView.builder(
-                shrinkWrap: true,
-                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 4),
-                itemCount: gradeList.length,
-                itemBuilder: (BuildContext ctx, idx) {
-                  return GridTile(
-                    child: InkWell(
-                      onTap: () async {
-                        gradeData['$songNum'] = gradeList[idx];
-                        countCleared();
-                        setState(() {});
-                        Get.back();
-                        await _pref.write('S21', gradeData);
-                      },
-                      onLongPress: () async {
-                        gradeData['$songNum'] = '${gradeList[idx]}_O';
-                        setState(() {});
-                        Get.back();
-                        await _pref.write('S21', gradeData);
-                      },
-                      child: Container(
-                        margin: const EdgeInsets.all(8.0),
-                        child: Image.asset(
-                            'assets/grade/grade${gradeList[idx]}.png'),
-                      ),
-                    ),
-                  );
-                },
-              ),
-            ],
-          ),
-        );
-      },
-    );
-  }
-
-  Future countCleared() async {
-    var gradeList = ['SSS', 'SS', 'S', 'A', 'B', 'C', 'D', 'F'];
-
-    clearedCount = 0;
-
-    for (var grade in gradeData.values) {
-      if (gradeList.contains(grade)) clearedCount++;
-    }
   }
 
   Future loadGradeData() async {
     try {
-      gradeData = await _pref.read('S21');
+      gradeData = await _pref.read('$selectType$selectLevel');
     } catch (e) {
       gradeData = {};
     }
-    await countCleared();
   }
 
-  Future loadDifficultyData() async {
-    var jsonText = await rootBundle.loadString('assets/json/S21.json');
+  Future loadDifData() async {
+    var jsonText =
+        await rootBundle.loadString('assets/json/$selectType$selectLevel.json');
     difData = json.decode(jsonText);
-    return true;
+
+    return difData;
   }
 
   Future loadFullSongData() async {
     var jsonText = await rootBundle.loadString('assets/json/songList.json');
     fullSongData = json.decode(jsonText);
-    return true;
   }
 
-  Future<String> saveImage(Uint8List bytes) async {
+  Future saveImage(Uint8List bytes) async {
     await [Permission.storage].request();
 
     final time = DateTime.now()
@@ -155,84 +67,31 @@ class _SongListScreenState extends State<SongListScreen> {
         .replaceAll('.', '-')
         .replaceAll(':', '-');
     final name = 'PIU_$time';
-    final result = await ImageGallerySaver.saveImage(bytes, name:name);
 
-    return result['filePath'];
+    await ImageGallerySaver.saveImage(bytes, name: name);
   }
 
-  Widget songJacketImage(dif, idx) {
-    var songData = difData[difName[dif]][idx];
-    return Stack(
-      children: [
-        ClipRRect(
-          borderRadius: BorderRadius.circular(4.0),
-          child: Image.asset('assets/songJacket/${songData['songNum']}.png'),
-        ),
-        Row(
-          children: [
-            if (songData['skill'].contains('D'))
-              Container(
-                width: 15,
-                height: 15,
-                decoration: BoxDecoration(
-                  border: Border.all(color: Colors.white),
-                  color: Colors.red,
-                  shape: BoxShape.circle,
-                ),
-              ),
-            if (songData['skill'].contains('G'))
-              Container(
-                width: 15,
-                height: 15,
-                decoration: BoxDecoration(
-                  border: Border.all(color: Colors.white),
-                  color: Colors.yellow,
-                  shape: BoxShape.circle,
-                ),
-              ),
-            if (songData['skill'].contains('T'))
-              Container(
-                width: 15,
-                height: 15,
-                decoration: BoxDecoration(
-                  border: Border.all(color: Colors.white),
-                  color: Colors.green,
-                  shape: BoxShape.circle,
-                ),
-              ),
-            if (songData['skill'].contains('B'))
-              Container(
-                width: 15,
-                height: 15,
-                decoration: BoxDecoration(
-                  border: Border.all(color: Colors.white),
-                  color: Colors.blueAccent,
-                  shape: BoxShape.circle,
-                ),
-              ),
-            if (songData['skill'].contains('S'))
-              Container(
-                width: 15,
-                height: 15,
-                decoration: BoxDecoration(
-                  border: Border.all(color: Colors.white),
-                  color: Colors.grey,
-                  shape: BoxShape.circle,
-                ),
-              ),
-          ],
-        ),
-        if (gradeData['${songData['songNum']}'] != null)
-          Align(
-            alignment: Alignment.bottomRight,
-            child: Container(
-              height: 27.5,
-              child: Image.asset(
-                  'assets/grade/grade${gradeData['${songData['songNum']}']}.png'),
-            ),
-          ),
-      ],
-    );
+  Future calcClearedSong() async {
+    clearedCount = 0;
+    var anotherGradeData = {};
+
+    try {
+      if (selectType == 'S') {
+        anotherGradeData = await _pref.read('D$selectLevel');
+      } else {
+        anotherGradeData = await _pref.read('S$selectLevel');
+      }
+    } catch (e) {
+      anotherGradeData = {};
+    }
+
+    for (var grade in gradeData.values) {
+      if (gradeList.contains(grade)) clearedCount++;
+    }
+
+    for (var grade in anotherGradeData.values) {
+      if (gradeList.contains(grade)) clearedCount++;
+    }
   }
 
   Widget roadToTitle() {
@@ -247,12 +106,18 @@ class _SongListScreenState extends State<SongListScreen> {
               children: [
                 Text(
                   'Road to ',
-                  style: TextStyle(fontSize: 25, fontWeight: FontWeight.w600, color: Colors.white),
+                  style: TextStyle(
+                      fontSize: 25,
+                      fontWeight: FontWeight.w600,
+                      color: Colors.white),
                 ),
                 Image.asset('assets/title/33.png'),
                 Text(
                   ' ($clearedCount/30)',
-                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.w500, color: Colors.white),
+                  style: TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.w500,
+                      color: Colors.white),
                 ),
               ],
             ),
@@ -291,9 +156,9 @@ class _SongListScreenState extends State<SongListScreen> {
                     onLongPress: () async {
                       gradeData
                           .remove('${difData[difName[dif]][idx]['songNum']}');
-                      countCleared();
+                      calcClearedSong();
                       setState(() {});
-                      await _pref.write('S21', gradeData);
+                      await _pref.write('$selectType$selectLevel', gradeData);
                     },
                     child: songJacketImage(dif, idx),
                   );
@@ -310,6 +175,116 @@ class _SongListScreenState extends State<SongListScreen> {
     );
   }
 
+  Widget songJacketImage(dif, idx) {
+    var songData = difData[difName[dif]][idx];
+    return Stack(
+      children: [
+        ClipRRect(
+          borderRadius: BorderRadius.circular(4.0),
+          child: Image.asset('assets/songJacket/${songData['songNum']}.png'),
+        ),
+        Row(
+          children: [
+            for (var skill in skillList)
+              if (songData['skill'].contains(skill))
+                Container(
+                  width: 15,
+                  height: 15,
+                  decoration: BoxDecoration(
+                    border: Border.all(color: Colors.white),
+                    color: skillColor[skillList.indexOf(skill)],
+                    shape: BoxShape.circle,
+                  ),
+                ),
+          ],
+        ),
+        if (gradeList.contains(gradeData['${songData['songNum']}']))
+          ClipRRect(
+              borderRadius: BorderRadius.circular(4.0),
+              child: Image.asset('assets/grade/cleared.png')),
+        if (gradeData['${songData['songNum']}'] != null)
+          Align(
+            alignment: Alignment.bottomRight,
+            child: Container(
+              height: 27.5,
+              child: Image.asset(
+                  'assets/grade/grade${gradeData['${songData['songNum']}']}.png'),
+            ),
+          ),
+      ],
+    );
+  }
+
+  void showGradeModal(context, songNum) {
+    void updateScreen() async {
+      calcClearedSong();
+      setState(() {});
+      Get.back();
+      await _pref.write('$selectType$selectLevel', gradeData);
+    }
+
+    String songName = '';
+    for (var song in fullSongData['songs']) {
+      if (song['songNo'].toString() == songNum) {
+        songName = song['songTitle_ko'];
+        break;
+      }
+    }
+
+    showModalBottomSheet(
+      context: context,
+      builder: (ctx) {
+        return Container(
+          padding: const EdgeInsets.fromLTRB(8.0, 8.0, 8.0, 16.0),
+          child: Wrap(
+            children: [
+              ListTile(
+                title: Text(
+                  songName,
+                  overflow: TextOverflow.ellipsis,
+                  style: TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.black),
+                ),
+              ),
+              GridView.builder(
+                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 4),
+                shrinkWrap: true,
+                itemCount: gradeList.length,
+                itemBuilder: (BuildContext ctx, idx) {
+                  return GridTile(
+                    child: InkWell(
+                      onTap: () async {
+                        gradeData['$songNum'] = gradeList[idx];
+                        updateScreen();
+                      },
+                      onLongPress: () async {
+                        gradeData['$songNum'] = '${gradeList[idx]}_O';
+                        updateScreen();
+                      },
+                      child: Container(
+                        margin: const EdgeInsets.all(8.0),
+                        child: Image.asset(
+                            'assets/grade/grade${gradeList[idx]}.png'),
+                      ),
+                    ),
+                  );
+                },
+              ),
+            ],
+          ),
+        );
+      },
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(
+          top: Radius.circular(20.0),
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -319,7 +294,6 @@ class _SongListScreenState extends State<SongListScreen> {
           IconButton(
             onPressed: () async {
               final image = await screenshotController.capture();
-
               if (image != null) {
                 await saveImage(image);
               } else {
@@ -337,7 +311,7 @@ class _SongListScreenState extends State<SongListScreen> {
           child: Container(
             color: Colors.white,
             child: FutureBuilder(
-              future: loadDifficultyData(),
+              future: loadDifData(),
               builder: (BuildContext context, AsyncSnapshot snapshot) {
                 if (snapshot.hasData == false) {
                   return Center(child: CircularProgressIndicator());

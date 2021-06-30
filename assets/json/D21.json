@@ -1,0 +1,495 @@
+{
+  "최상": [
+    {
+      "songNum": 194,
+      "skill": [
+        "G",
+        "T"
+      ]
+    },
+    {
+      "songNum": 379,
+      "skill": [
+        "T"
+      ]
+    },
+    {
+      "songNum": 3,
+      "skill": [
+        "T"
+      ]
+    },
+    {
+      "songNum": 27,
+      "skill": [
+        "T"
+      ]
+    },      {
+      "songNum": 522,
+      "skill": [
+      ]
+    }
+  ],
+  "상": [
+    {
+      "songNum": 89,
+      "skill": [
+        "T",
+        "S"
+      ]
+    },
+    {
+      "songNum": 14,
+      "skill": [
+      ]
+    },
+    {
+      "songNum": 244,
+      "skill": [
+        "T"
+      ]
+    },
+    {
+      "songNum": 399,
+      "skill": [
+        "D",
+        "T"
+      ]
+    },
+    {
+      "songNum": 533,
+      "skill": [
+        "G"
+      ]
+    },
+    {
+      "songNum": 143,
+      "skill": [
+        "T"
+      ]
+    },
+    {
+      "songNum": 695,
+      "skill": [
+      ]
+    }
+  ],
+  "중상": [
+    {
+      "songNum": 54,
+      "skill": [
+        "G"
+      ]
+    },
+    {
+      "songNum": 163,
+      "skill": [
+        "B"
+      ]
+    },
+    {
+      "songNum": 191,
+      "skill": [
+      ]
+    },
+    {
+      "songNum": 215,
+      "skill": [
+      ]
+    },
+    {
+      "songNum": 88,
+      "skill": [
+        "G",
+        "S"
+      ]
+    },
+    {
+      "songNum": 291,
+      "skill": [
+        "T"
+      ]
+    },
+    {
+      "songNum": 170,
+      "skill": [
+        "B"
+      ]
+    },
+    {
+      "songNum": 395,
+      "skill": [
+        "T"
+      ]
+    },
+    {
+      "songNum": 397,
+      "skill": [
+      ]
+    },
+    {
+      "songNum": 529,
+      "skill": [
+      ]
+    },
+    {
+      "songNum": 90,
+      "skill": [
+        "T"
+      ]
+    },
+    {
+      "songNum": 395,
+      "skill": [
+        "D"
+      ]
+    },
+    {
+      "songNum": 391,
+      "skill": [
+        "D",
+        "B"
+      ]
+    },
+    {
+      "songNum": 7475,
+      "skill": [
+        "D",
+        "T"
+      ]
+    }
+  ],
+  "중": [
+    {
+      "songNum": 428,
+      "skill": [
+        "T"
+      ]
+    },
+    {
+      "songNum": 295,
+      "skill": [
+        "T"
+      ]
+    },
+    {
+      "songNum": 66,
+      "skill": [
+        "T"
+      ]
+    },
+    {
+      "songNum": 283,
+      "skill": [
+        "T",
+        "B"
+      ]
+    },
+    {
+      "songNum": 278,
+      "skill": [
+        "T"
+      ]
+    },
+    {
+      "songNum": 218,
+      "skill": [
+        "T"
+      ]
+    },
+    {
+      "songNum": 690,
+      "skill": [
+        "T",
+        "S"
+      ]
+    },
+    {
+      "songNum": 7461,
+      "skill": [
+      ]
+    },
+    {
+      "songNum": 283,
+      "skill": [
+        "T",
+        "B"
+      ]
+    },
+    {
+      "songNum": 709,
+      "skill": [
+        "B"
+      ]
+    },
+    {
+      "songNum": 3957,
+      "skill": [
+        "T",
+        "B"
+      ]
+    },
+    {
+      "songNum": 430,
+      "skill": [
+      ]
+    },
+    {
+      "songNum": 3953,
+      "skill": [
+        "T"
+      ]
+    },
+    {
+      "songNum": 7488,
+      "skill": [
+        "B"
+      ]
+    },
+    {
+      "songNum": 30,
+      "skill": [
+      ]
+    },
+    {
+      "songNum": 78,
+      "skill": [
+        "T"
+      ]
+    },
+    {
+      "songNum": 385,
+      "skill": [
+      ]
+    },
+    {
+      "songNum": 3963,
+      "skill": [
+      ]
+    }
+  ],
+  "중하": [
+    {
+      "songNum": 108,
+      "skill": [
+        "S"
+      ]
+    },
+    {
+      "songNum": 341,
+      "skill": [
+        "D",
+        "B"
+      ]
+    },
+    {
+      "songNum": 227,
+      "skill": [
+      ]
+    },
+    {
+      "songNum": 162,
+      "skill": [
+      ]
+    },
+    {
+      "songNum": 204,
+      "skill": [
+        "G",
+        "B"
+      ]
+    },
+    {
+      "songNum": 206,
+      "skill": [
+        "T"
+      ]
+    },
+    {
+      "songNum": 361,
+      "skill": [
+        "D",
+        "B"
+      ]
+    },
+    {
+      "songNum": 320,
+      "skill": [
+        "D"
+      ]
+    },
+    {
+      "songNum": 336,
+      "skill": [
+        "T",
+        "B"
+      ]
+    },
+    {
+      "songNum": 421,
+      "skill": [
+        "B"
+      ]
+    },
+    {
+      "songNum": 692,
+      "skill": [
+      ]
+    },
+    {
+      "songNum": 299,
+      "skill": [
+        "G",
+        "T"
+      ]
+    },
+    {
+      "songNum": 7482,
+      "skill": [
+      ]
+    },
+    {
+      "songNum": 384,
+      "skill": [
+      ]
+    },
+    {
+      "songNum": 301,
+      "skill": [
+      ]
+    },
+    {
+      "songNum": 183,
+      "skill": [
+        "B"
+      ]
+    },
+    {
+      "songNum": 307,
+      "skill": [
+      ]
+    }
+  ],
+  "하": [
+    {
+      "songNum": 196,
+      "skill": [
+        "G",
+        "B"
+      ]
+    },
+    {
+      "songNum": 73,
+      "skill": [
+        "B"
+      ]
+    },
+    {
+      "songNum": 263,
+      "skill": [
+        "B"
+      ]
+    },
+    {
+      "songNum": 369,
+      "skill": [
+      ]
+    },
+    {
+      "songNum": 267,
+      "skill": [
+        "D"
+      ]
+    },
+    {
+      "songNum": 431,
+      "skill": [
+      ]
+    },
+    {
+      "songNum": 341,
+      "skill": [
+        "D",
+        "B"
+      ]
+    },
+    {
+      "songNum": 7469,
+      "skill": [
+        "D",
+        "B"
+      ]
+    },
+    {
+      "songNum": 158,
+      "skill": [
+        "D"
+      ]
+    },
+    {
+      "songNum": 223,
+      "skill": [
+        "D"
+      ]
+    }
+  ],
+  "최하": [
+  ],
+  "종특": [
+    {
+      "songNum": 124,
+      "skill": [
+        "D"
+      ]
+    },
+    {
+      "songNum": 429,
+      "skill": [
+        "G",
+        "B"
+      ]
+    },
+    {
+      "songNum": 71,
+      "skill": [
+      ]
+    },
+    {
+      "songNum": 532,
+      "skill": [
+        "G"
+      ]
+    },
+    {
+      "songNum": 7471,
+      "skill": [
+        "B"
+      ]
+    },
+    {
+      "songNum": 7481,
+      "skill": [
+        "B"
+      ]
+    },
+    {
+      "songNum": 434,
+      "skill": [
+        "B"
+      ]
+    },
+    {
+      "songNum": 439,
+      "skill": [
+        "G",
+        "B"
+      ]
+    },
+    {
+      "songNum": 92,
+      "skill": [
+        "G"
+      ]
+    }
+  ]
+}
